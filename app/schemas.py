@@ -48,3 +48,18 @@ class Player(PlayerBase):
 
     class Config:
         orm_mode = True
+
+class CoachBase(BaseModel):
+    nom: str
+    prenom: str
+    age: int
+    ville: str
+
+class CoachCreate(CoachBase):
+    pass
+
+class Coach(CoachBase):
+    id: int
+
+    class Config:
+        orm_mode = True
