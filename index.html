@@ -55,7 +55,7 @@
             teams.forEach(team => {
                 teamsList.innerHTML += `
                     <div class="team-item" id="team-${team.id}">
-                        <span>${team.name} (${team.city})</span>
+                        <span>${team.nom} (${team.ville})</span>
                         <button onclick="deleteTeam(${team.id})">Delete</button>
                         <button onclick="editTeam(${team.id})">Edit</button>
                     </div>
@@ -65,15 +65,15 @@
 
         async function createTeam() {
             const id = document.getElementById('team-id').value;
-            const name = document.getElementById('team-name').value;
-            const city = document.getElementById('team-city').value;
+            const nom = document.getElementById('team-name').value;
+            const ville = document.getElementById('team-city').value;
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id: parseInt(id), name, city })
+                body: JSON.stringify({ id: parseInt(id), nom, ville })
             });
 
             if (response.ok) {
