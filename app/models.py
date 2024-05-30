@@ -43,7 +43,7 @@ class Match(Base):
     __tablename__ = "matches"
 
     id = Column(Integer, primary_key=True, index=True)
-    date = Column(String, index=True)
+    date = Column(Date, index=True)
     equipe_un_id = Column(Integer, ForeignKey("teams.id"))
     equipe_deux_id = Column(Integer, ForeignKey("teams.id"))
     resultat = Column(String, index=False)

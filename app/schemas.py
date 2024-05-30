@@ -1,5 +1,5 @@
 from pydantic import BaseModel, validator
-from datetime import date
+from datetime import date, datetime
 from typing import Optional, List
 
 class PlayerBase(BaseModel):
@@ -48,11 +48,11 @@ class Team(TeamBase):
         orm_mode = True
 
 class MatchBase(BaseModel):
-    date: str
+    date: date
+    equipe_un_id: int
+    equipe_deux_id: int
     resultat: Optional[str] = None
     lieu: str
-    matchs_domicile: List[Team] = []
-    matchs_exterieur: List[Team] = []
 
 class MatchCreate(MatchBase):
     pass
@@ -62,3 +62,11 @@ class Match(MatchBase):
 
     class Config:
         orm_mode = True
+
+class MatchWithTeams(MatchBase):
+    id: int
+    equipe_un: TeamBase
+    equipe_deux: TeamBase
+
+    class Config:
+        orm_mode: True

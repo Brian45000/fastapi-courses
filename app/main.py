@@ -70,12 +70,12 @@ def delete_team(team_id: int, db: Session = Depends(get_db)):
     return {"message": "Team deleted successfully"}
 
 # Routes pour les matchs
-@app.get("/matchs", response_model=list[schemas.Match])
+@app.get("/matchs", response_model=list[schemas.MatchWithTeams])
 def get_matches(db: Session = Depends(get_db)):
     matches = db.query(models.Match).all()
     return matches
 
-@app.get("/matchs/{match_id}", response_model=schemas.Match)
+@app.get("/matchs/{match_id}", response_model=schemas.MatchWithTeams)
 def get_match(match_id: int, db: Session = Depends(get_db)):
     match = db.query(models.Match).filter(models.Match.id == match_id).first()
     if match is None:
