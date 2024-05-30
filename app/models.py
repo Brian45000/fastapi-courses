@@ -35,6 +35,7 @@ class Coach(Base):
     prenom = Column(String, index=True)
     age = Column(Integer, index=True)
     ville = Column(String, index=True)
+    equipe_id = Column(Integer, ForeignKey("teams.id"))  # Ajoutez cette ligne
 
     equipe = relationship("Team", back_populates="coaches")
 
