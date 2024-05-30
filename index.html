@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ligue 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .team-form input,
+        .team-form button {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .teams-list {
+            margin-top: 20px;
+        }
+
+        .team-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Ligue 1</h1>
+        <div class="team-form">
+            <input type="number" id="team-id" placeholder="ID" required>
+            <input type="text" id="team-name" placeholder="Nom de l'équipe" required>
+            <input type="text" id="team-city" placeholder="Ville" required>
+            <button onclick="createTeam()">Ajouter équipe</button>
+        </div>
+        <div class="teams-list" id="teams-list"></div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://192.168.1.91:8000/teams';
+
+        async function fetchTeams() {
+            const response = await fetch(apiUrl);
+            const teams = await response.json();
+            const teamsList = document.getElementById('teams-list');
+            teamsList.innerHTML = '';
+            teams.forEach(team => {
+                teamsList.innerHTML += `
+                    <div class="team-item" id="team-${team.id}">
+                        <span>${team.name} (${team.city})</span>
+                        <button onclick="deleteTeam(${team.id})">Delete</button>
+                        <button onclick="editTeam(${team.id})">Edit</button>
+                    </div>
+                `;
+            });
+        }
+
+        async function createTeam() {
+            const id = document.getElementById('team-id').value;
+            const name = document.getElementById('team-name').value;
+            const city = document.getElementById('team-city').value;
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: parseInt(id), name, city })
+            });
+
+            if (response.ok) {
+                fetchTeams();
+            } else {
+                alert('Failed to create team');
+            }
+        }
+
+        async function deleteTeam(id) {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                fetchTeams();
+            } else {
+                alert('Failed to delete team');
+            }
+        }
+
+        function editTeam(id) {
+            const teamItem = document.getElementById(`team-${id}`);
+            const name = prompt("Enter new team name:");
+            const city = prompt("Enter new city:");
+
+            if (name && city) {
+                updateTeam(id, name, city);
+            }
+        }
+
+        async function updateTeam(id, name, city) {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, name, city })
+            });
+
+            if (response.ok) {
+                fetchTeams();
+            } else {
+                alert('Failed to update team');
+            }
+        }
+
+        fetchTeams();
+    </script>
+</body>
+
+</html>

@@ -6,44 +6,44 @@ class Team(Base):
     __tablename__ = "teams"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    city = Column(String, index=True)
+    nom = Column(String, index=True)
+    ville = Column(String, index=True)
     
-    players = relationship("Player", back_populates="team")
-    matches_home = relationship("Match", foreign_keys="[Match.team_one_id]", back_populates="team_one")
-    matches_away = relationship("Match", foreign_keys="[Match.team_two_id]", back_populates="team_two")
+    joueurs = relationship("Player", back_populates="team")
+    matchs_domicile = relationship("Match", foreign_keys="[Match.equipe_un_id]", back_populates="equipe_un")
+    matchs_exterieur = relationship("Match", foreign_keys="[Match.equipe_deux_id]", back_populates="equipe_deux")
 
 class Player(Base):
     __tablename__ = "players"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    firstname = Column(String, index=True)
+    nom = Column(String, index=True)
+    prenom = Column(String, index=True)
     age = Column(Integer, index=True)
-    city = Column(String, index=True)
-    number = Column(Integer, index=True)
-    team_id = Column(Integer, ForeignKey("teams.id"))
+    ville = Column(String, index=True)
+    numero = Column(Integer, index=True)
+    equipe_id = Column(Integer, ForeignKey("teams.id"))
 
-    team = relationship("Team", back_populates="players")
+    equipe = relationship("Team", back_populates="players")
 
 class Coach(Base):
     __tablename__ = "coaches"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    firstname = Column(String, index=True)
+    nom = Column(String, index=True)
+    prenom = Column(String, index=True)
     age = Column(Integer, index=True)
-    city = Column(String, index=True)
+    ville = Column(String, index=True)
 
 class Match(Base):
     __tablename__ = "matches"
 
     id = Column(Integer, primary_key=True, index=True)
     date = Column(Date, index=True)
-    team_one_id = Column(Integer, ForeignKey("teams.id"))
-    team_two_id = Column(Integer, ForeignKey("teams.id"))
-    result = Column(String, index=True)
-    area = Column(String, index=True)
+    equipe_un_id = Column(Integer, ForeignKey("teams.id"))
+    equipe_deux_id = Column(Integer, ForeignKey("teams.id"))
+    resultat = Column(String, index=True)
+    lieu = Column(String, index=True)
     
-    team_one = relationship("Team", foreign_keys=[team_one_id], back_populates="matches_home")
-    team_two = relationship("Team", foreign_keys=[team_two_id], back_populates="matches_away")
+    equipe_un = relationship("Team", foreign_keys=[equipe_un_id], back_populates="matchs_domicile")
+    equipe_deux = relationship("Team", foreign_keys=[equipe_deux_id], back_populates="matchs_exterieur")
