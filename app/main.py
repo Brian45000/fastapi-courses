@@ -73,9 +73,6 @@ def delete_team(team_id: int, db: Session = Depends(get_db)):
 @app.get("/matchs", response_model=list[schemas.Match])
 def get_matches(db: Session = Depends(get_db)):
     matches = db.query(models.Match).all()
-    for match in matches:
-        if isinstance(match.date, str):
-            match.date = date.fromisoformat(match.date)
     return matches
 
 @app.get("/matchs/{match_id}", response_model=schemas.Match)

@@ -42,23 +42,17 @@ class TeamCreate(TeamBase):
 class Team(TeamBase):
     id: int
     joueurs: List[Player] = []
-    coaches: List[Coach] = []  # Utilisez "coaches" pour correspondre au modèle SQLAlchemy
+    coaches: List[Coach] = []
 
     class Config:
         orm_mode = True
 
 class MatchBase(BaseModel):
-    date: Optional[date]  # Accepter les dates éventuellement manquantes
-    team_one_id: int
-    team_two_id: int
-    result: Optional[str] = None
-    area: str
-
-    @validator('date', pre=True, always=True)
-    def parse_date(cls, value):
-        if isinstance(value, str):
-            return date.fromisoformat(value)
-        return value
+    date: str
+    resultat: Optional[str] = None
+    lieu: str
+    matchs_domicile: List[Team] = []
+    matchs_exterieur: List[Team] = []
 
 class MatchCreate(MatchBase):
     pass
