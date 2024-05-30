@@ -10,6 +10,7 @@ class Team(Base):
     ville = Column(String, index=True)
     
     joueurs = relationship("Player", back_populates="equipe")
+    coaches = relationship("Coach", back_populates="equipe")
     matchs_domicile = relationship("Match", foreign_keys="[Match.equipe_un_id]", back_populates="equipe_un")
     matchs_exterieur = relationship("Match", foreign_keys="[Match.equipe_deux_id]", back_populates="equipe_deux")
 
@@ -34,6 +35,8 @@ class Coach(Base):
     prenom = Column(String, index=True)
     age = Column(Integer, index=True)
     ville = Column(String, index=True)
+
+    equipe = relationship("Team", back_populates="coaches")
 
 class Match(Base):
     __tablename__ = "matches"
