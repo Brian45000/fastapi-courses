@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class TeamBase(BaseModel):
-    name: str
-    city: str
+    nom: str
+    ville: str
 
 class TeamCreate(TeamBase):
     pass
