@@ -25,8 +25,6 @@ class CoachBase(BaseModel):
     age: int
     ville: str
 
-
-
 class Coach(CoachBase):
     id: int
     equipe_id: int
