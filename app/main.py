@@ -68,3 +68,43 @@ def delete_team(team_id: int, db: Session = Depends(get_db)):
     db.delete(team)
     db.commit()
     return {"message": "Team deleted successfully"}
+
+# Routes pour les matchs
+@app.get("/matchs", response_model=List[schemas.Match])
+def get_matches(db: Session = Depends(get_db)):
+    return db.query(models.Match).all()
+
+@app.get("/matchs/{match_id}", response_model=schemas.Match)
+def get_match(match_id: int, db: Session = Depends(get_db)):
+    match = db.query(models.Match).filter(models.Match.id == match_id).first()
+    if match is None:
+        raise HTTPException(status_code=404, detail="Match inconnu")
+    return match
+
+@app.post("/matchs", response_model=schemas.Match)
+def create_match(match: schemas.MatchCreate, db: Session = Depends(get_db)):
+    db_match = models.Match(**match.dict())
+    db.add(db_match)
+    db.commit()
+    db.refresh(db_match)
+    return db_match
+
+@app.put("/matchs/{match_id}", response_model=schemas.Match)
+def update_match(match_id: int, updated_match: schemas.MatchCreate, db: Session = Depends(get_db)):
+    match = db.query(models.Match).filter(models.Match.id == match_id).first()
+    if match is None:
+        raise HTTPException(status_code=404, detail="Match inconnu")
+    for key, value in updated_match.dict().items():
+        setattr(match, key, value)
+    db.commit()
+    db.refresh(match)
+    return match
+
+@app.delete("/matchs/{match_id}")
+def delete_match(match_id: int, db: Session = Depends(get_db)):
+    match = db.query(models.Match).filter(models.Match.id == match_id).first()
+    if match is None:
+        raise HTTPException(status_code=404, detail="Match inconnu")
+    db.delete(match)
+    db.commit()
+    return {"message": "Match supprimé avec succès"}
