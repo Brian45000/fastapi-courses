@@ -97,21 +97,21 @@
 
         function editTeam(id) {
             const teamItem = document.getElementById(`team-${id}`);
-            const name = prompt("Enter new team name:");
-            const city = prompt("Enter new city:");
+            const nom = prompt("Saisir un nouveau nom d'équipe:");
+            const ville = prompt("Saisir la nouvelle ville:");
 
-            if (name && city) {
-                updateTeam(id, name, city);
+            if (nom && ville) {
+                updateTeam(id, nom, ville);
             }
         }
 
-        async function updateTeam(id, name, city) {
+        async function updateTeam(id, nom, ville) {
             const response = await fetch(`${apiUrl}/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ id, name, city })
+                body: JSON.stringify({ id, nom, ville })
             });
 
             if (response.ok) {
