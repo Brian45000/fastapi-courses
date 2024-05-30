@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from datetime import date
 from typing import Optional, List
 
@@ -25,8 +25,7 @@ class CoachBase(BaseModel):
     age: int
     ville: str
 
-class CoachCreate(CoachBase):
-    equipe_id: int  # Ajoutez cette ligne
+
 
 class Coach(CoachBase):
     id: int
@@ -51,11 +50,17 @@ class Team(TeamBase):
         orm_mode = True
 
 class MatchBase(BaseModel):
-    date: date
-    equipe_un_id: int
-    equipe_deux_id: int
-    resultat: Optional[str] = None
-    lieu: str
+    date: Optional[date]  # Accepter les dates éventuellement manquantes
+    team_one_id: int
+    team_two_id: int
+    result: Optional[str] = None
+    area: str
+
+    @validator('date', pre=True, always=True)
+    def parse_date(cls, value):
+        if isinstance(value, str):
+            return date.fromisoformat(value)
+        return value
 
 class MatchCreate(MatchBase):
     pass
