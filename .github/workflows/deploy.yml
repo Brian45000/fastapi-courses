@@ -22,7 +22,7 @@ jobs:
           remote_path: /home/alt/fast-api
           remote_host: 10.17.10.6
           remote_user: ${{ secrets.DEV_SERVER_USER }}
-          remote_pass: ${{ secrets.DEV_SERVER_PASS }}
+          remote_key_pass: ${{ secrets.DEV_SERVER_PASS }}
 
       - name: Run uvicorn on dev server
         run: |
@@ -43,7 +43,7 @@ jobs:
           remote_path: /home/alt/fast-api
           remote_host: 10.17.10.17
           remote_user: ${{ secrets.PROD_SERVER_USER }}
-          remote_pass: ${{ secrets.PROD_SERVER_PASS }}
+          remote_key_pass: ${{ secrets.PROD_SERVER_PASS }}
 
       - name: Run uvicorn on prod server
         run: |
