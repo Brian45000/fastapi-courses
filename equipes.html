@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ligue 1</title>
+    <title>Équipes - Ligue 1</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome CSS -->
@@ -21,8 +21,7 @@
             margin: 10px 0;
         }
 
-        .team-item,
-        .match-item {
+        .team-item {
             margin-bottom: 10px;
             border: 1px solid #ccc;
             padding: 10px;
@@ -38,8 +37,28 @@
 </head>
 
 <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Ligue 1</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="equipes.html">Équipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="matchs.html">Matchs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
-        <h1 class="text-center">Ligue 1</h1>
+        <h1 class="text-center">Équipes</h1>
         <div class="card">
             <div class="card-body">
                 <h3 class="card-title">Ajouter une équipe</h3>
@@ -62,54 +81,8 @@
         <div class="card mt-4">
             <div class="card-body">
                 <h3 class="card-title">Liste des équipes</h3>
-                <div class="teams-list" id="teams-list"></div>
-            </div>
-        </div>
-        <div class="card mt-4">
-            <div class="card-body">
-                <h3 class="card-title">Ajouter un match</h3>
-                <div class="match-form mb-4">
-                    <div class="form-group">
-                        <label for="match-team1">Équipe 1</label>
-                        <select class="form-control" id="match-team1" required>
-                            <!-- Options pour les équipes -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="match-team2">Équipe 2</label>
-                        <select class="form-control" id="match-team2" required>
-                            <!-- Options pour les équipes -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <input type="date" class="form-control" id="match-date" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="match-result" placeholder="Résultat">
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="match-location" placeholder="Lieu">
-                    </div>
-                    <button class="btn btn-primary" onclick="createMatch()"><i class="fas fa-plus"></i> Ajouter
-                        match</button>
-                </div>
-
-                <h3 class="card-title">Matchs</h3>
-                <div class="matches-list" id="matches-list">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">Équipe 1</th>
-                                <th scope="col">Équipe 2</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Résultat</th>
-                                <th scope="col">Lieu</th>
-                            </tr>
-                        </thead>
-                        <tbody id="matches-tbody">
-                            <!-- Les données des matchs seront insérées ici -->
-                        </tbody>
-                    </table>
+                <div class="teams-list" id="teams-list">
+                    <!-- Teams list will be filled dynamically by JavaScript -->
                 </div>
             </div>
         </div>
@@ -207,86 +180,10 @@
             }
         }
 
-        async function fetchMatches() {
-            const response = await fetch(`${apiUrl}/matchs`);
-            const matches = await response.json();
-            const matchesTbody = document.getElementById('matches-tbody');
-            matchesTbody.innerHTML = '';
-            matches.forEach(match => {
-                matchesTbody.innerHTML += `
-                    <tr>
-                        <td>${match.equipe_un.nom}</td>
-                        <td>${match.equipe_deux.nom}</td>
-                        <td>${match.date}</td>
-                        <td>${match.resultat}</td>
-                        <td>${match.lieu}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" onclick="deleteMatch(${match.id})"><i class="fas fa-trash"></i> Supprimer</button>
-                            <button class="btn btn-secondary btn-sm" onclick="updateMatch(${match.id})"><i class="fas fa-edit"></i> Modifier</button>
-                        </td>
-                    </tr>
-                `;
-            });
-        }
-
-        async function createMatch() {
-            const team1Id = document.getElementById('match-team1').value;
-            const team2Id = document.getElementById('match-team2').value;
-            const date = document.getElementById('match-date').value;
-            const result = document.getElementById('match-result').value;
-            const location = document.getElementById('match-location').value;
-
-            const response = await fetch(`${apiUrl}/matchs`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ equipe_un_id: parseInt(team1Id), equipe_deux_id: parseInt(team2Id), date, resultat: result, lieu: location })
-            });
-
-            if (response.ok) {
-                fetchMatches();
-            } else {
-                alert('Erreur lors de la création du match');
-            }
-        }
-
-        async function deleteMatch(id) {
-            const response = await fetch(`${apiUrl}/matchs/${id}`, {
-                method: 'DELETE'
-            });
-
-            if (response.ok) {
-                fetchMatches();
-            } else {
-                alert('Erreur lors de la suppression du match');
-            }
-        }
-
-        async function fetchTeamsForMatchForm() {
-            const response = await fetch(`${apiUrl}/teams`);
-            const teams = await response.json();
-
-            // Remplir le menu déroulant pour l'équipe 1
-            const matchTeam1Select = document.getElementById('match-team1');
-            teams.forEach(team => {
-                matchTeam1Select.innerHTML += `<option value="${team.id}">${team.nom}</option>`;
-            });
-
-            // Remplir le menu déroulant pour l'équipe 2
-            const matchTeam2Select = document.getElementById('match-team2');
-            teams.forEach(team => {
-                matchTeam2Select.innerHTML += `<option value="${team.id}">${team.nom}</option>`;
-            });
-        }
-
-        // Appeler fetchTeamsForMatchForm lors du chargement de la page
+        // Fetch teams when the page loads
         window.onload = function () {
-            fetchTeamsForMatchForm();
+            fetchTeams();
         };
-
-        fetchTeams();
-        fetchMatches();
     </script>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
