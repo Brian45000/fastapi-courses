@@ -1,0 +1,64 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+
+jobs:
+  deploy_dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies and start virtual environment
+        run: |
+          cd /home/alt/fast-api
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Rsync to dev server
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          remote_path: /home/alt/fast-api
+          remote_host: 10.17.10.6
+          remote_user: ${{ secrets.DEV_SERVER_USER }}
+          remote_key: ${{ secrets.DEV_SERVER_PASS }}
+
+      - name: Run uvicorn on dev server
+        run: |
+          ssh ${{ secrets.DEV_SERVER_USER }}@10.17.10.6 "cd /home/alt/fast-api && source venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  deploy_prod:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies and start virtual environment
+        run: |
+          cd /home/alt/fast-api
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Rsync to prod server
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          remote_path: /home/alt/fast-api
+          remote_host: 10.17.10.17
+          remote_user: ${{ secrets.PROD_SERVER_USER }}
+          remote_key: ${{ secrets.PROD_SERVER_PASS }}
+
+      - name: Run uvicorn on prod server
+        run: |
+          ssh ${{ secrets.PROD_SERVER_USER }}@10.17.10.17 "cd /home/alt/fast-api && source venv/bin/activate && uvicorn app.main:app --host 0.0.0.0 --port 8000"
