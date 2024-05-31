@@ -15,7 +15,7 @@ Ce projet est une API FastAPI pour gérer des matchs de sports, des équipes, de
 ├──diagrammes/
 │  │
 │  ├── cas_utilisation.png
-│  └── class.png
+│  └── classe.png
 │
 ├──README.md
 ├──index.html
