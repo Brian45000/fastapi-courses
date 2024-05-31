@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Rsync to dev server
-        uses: burnett01/rsync-deployments
+        uses: burnett01/rsync-deployments@v7.0.1
         with:
           switches: -avzr --delete
           remote_path: /home/alt/fast-api
@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Rsync to prod server
-        uses: burnett01/rsync-deployments
+        uses: burnett01/rsync-deployments@v7.0.1
         with:
           switches: -avzr --delete
           remote_path: /home/alt/fast-api
