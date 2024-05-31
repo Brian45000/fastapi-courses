@@ -19,6 +19,8 @@ Ce projet est une API FastAPI pour gérer des matchs de sports, des équipes, de
 │
 ├──README.md
 ├──index.html
+├──equipes.html
+├──matchs.html
 ```
 
 ### `database.py`
