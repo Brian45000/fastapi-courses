@@ -4,7 +4,7 @@
 Ce projet est une API FastAPI pour gérer des matchs de sports, des équipes, des joueurs et des coachs. L'API permet de créer, lire, mettre à jour et supprimer des matchs ainsi que de gérer les équipes.
 
 ## Architecture des fichiers
-
+```
 ├──app/
 │  │
 │  ├── database.py
@@ -19,6 +19,7 @@ Ce projet est une API FastAPI pour gérer des matchs de sports, des équipes, de
 │
 ├──README.md
 ├──index.html
+```
 
 ### `database.py`
 Contient la configuration de la base de données avec SQLAlchemy.
